@@ -44,6 +44,12 @@ If no ticket tracker is configured in `CLAUDE.md`, skip the Jira steps and repor
      5. One line? → one line
      6. Else: the minimum that works
      Never cut validation, error handling, security, or accessibility. (If the [`ponytail`](https://github.com/DietrichGebert/ponytail) plugin is installed, its hooks enforce this — keep walking the ladder anyway as a habit.)
+   - **Engineering discipline** (ladder-compatible — no Clean Code / GoF cargo-culting):
+     1. **Match neighbors' conventions** — the file/package/module's existing style wins over personal taste.
+     2. **Protect trust boundaries** — validate, authenticate, and handle errors at IO edges (HTTP handlers, DB, external APIs). Trust internal callers.
+     3. **Defer abstraction until 3 callers** — no interface/factory/wrapper for one implementation. Inline until duplication is concrete.
+     4. **Locality > indirection** — keep related code together. A new file/layer needs to pay for itself.
+     5. **Name the tradeoff** — if you pick a pattern (cache, retry, queue), one comment line: what it buys, what it costs, when to revisit.
    - Run targeted tests. Test fixture failures: fix fixture. Code regression: fix code.
 
 4. **Verify**
