@@ -14,6 +14,7 @@ A single plugin, `nick-toolkit`, with:
 
 ### Skills
 
+- **`/kickoff`** — Consultant-style discovery for a fuzzy idea / project / ERD / PRD. Reflects what you said, asks 2-3 highest-value follow-ups (not a form), then synthesizes a structured Kickoff Brief and suggests a next step (brainstorm / project-planner / erd-creator / PRD / hold). Use when an idea isn't yet shaped enough to plan.
 - **`/finish`** — Chains `project-planner` → confirm → `project-executor` in one flow.
 - **`/audit-overhead`** — Periodic cleanup pass on your agents/skills/memory/CLAUDE.md. Also sweeps stale `graft` worktrees if `graft` is installed (skipped otherwise). Read-only; proposes cuts.
 
