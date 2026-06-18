@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "nick-marketplace",
+  "owner": {
+    "name": "Nick Chung",
+    "url": "https://github.com/NickChunglolz"
+  },
+  "plugins": [
+    {
+      "name": "nick-toolkit",
+      "source": "./nick-toolkit",
+      "description": "Generic project-lifecycle agents (planner, executor, idea-finder) plus /finish and /audit-overhead skills. Drop-in for any project; standing context comes from a CLAUDE.md you fill in."
+    }
+  ]
+}

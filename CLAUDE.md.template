@@ -1,0 +1,64 @@
+# CLAUDE.md (template)
+
+Drop this file at your project root, fill in the slots, and the `nick-toolkit` agents/skills will pick up standing context without you re-explaining every session.
+
+Delete any section that doesn't apply. Keep it tight — <200 lines.
+
+---
+
+## Working context
+
+- **Working directory**: `<absolute path>`
+- **User**: `<your name>` (`<handle>`) — `<role>`, `<team>`, `<company>`
+- **Default tone**: terse
+
+## Repos (paths under this working dir)
+
+- `<repo-name>` — `<one-line purpose>`
+- `<repo-name>` — `<one-line purpose>`
+
+## Ticket tracker (optional — delete if N/A)
+
+- **System**: Jira via the Atlassian MCP
+- **CloudId**: `<your-org>.atlassian.net`
+- **Default project key**: `<KEY>` (e.g. `PROJ`)
+- **Account IDs** (for @-mentions / reviewer lookups):
+  - `<Name>`: `<account-id>`
+
+## Design docs (optional — delete if N/A)
+
+- **System**: Confluence via the Atlassian MCP
+- **Space ID**: `<id>`
+- **Design-doc parent page**: `<id>` — `<title>`
+
+## Branch / commit conventions
+
+- **Branch pattern**: `<handle>/<type>-<short-slug>` (e.g. `nick/feat-cart-discount`)
+- **Commit subject**: `<type>: <imperative description> (<TICKET-KEY>)`
+- **Conventional types in use**: `feat`, `fix`, `hotfix`, `chore`, `refactor`, `perf`, `test`, `docs`
+- **PR title** mirrors commit subject. PR body has `## Summary` and `## Test plan` sections.
+
+## Custom agents available
+
+- `project-planner` — plans work from a design doc / ticket epic / free-form goal
+- `project-executor` — drives the plan: implement, test, PR, update tracker
+- `idea-finder` — sweeps code/tickets/docs for what's worth doing
+- (Add any project-specific agents here)
+
+## Custom skills available
+
+- `/finish` — plan → confirm → execute (chains the two project agents)
+- `/audit-overhead` — recurring cleanup of agents/skills/memory/CLAUDE.md
+
+## Hard rules
+
+(Examples — replace with your own. Keep this list short and concrete.)
+
+- Don't create scratch files in `<protected-repo>` without being asked.
+- Don't edit files when the user is asking a diagnostic question — ask before editing.
+- Fix test fixtures, not migrations, when a DB constraint fails in a test.
+- (Add any team-specific rules here.)
+
+## Source-of-truth hierarchy
+
+When info appears in multiple places, this CLAUDE.md is canonical for standing project context. Personal preferences live in `~/.claude/projects/<sanitized-cwd>/memory/`. Agent behavior lives in the agent files.

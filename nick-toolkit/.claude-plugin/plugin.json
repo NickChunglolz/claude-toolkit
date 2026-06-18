@@ -1,0 +1,10 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "nick-toolkit",
+  "version": "0.1.0",
+  "description": "Generic project-lifecycle agents and skills. Plan → execute loop, idea sweep, and recurring config-audit. Standing project context is read from a CLAUDE.md at the working dir root — see README for the template.",
+  "author": {
+    "name": "Nick Chung",
+    "url": "https://github.com/NickChunglolz"
+  }
+}
