@@ -19,6 +19,11 @@ A single plugin, `nick-toolkit`, with:
 
 ## Optional integrations
 
+- **[`ponytail`](https://github.com/DietrichGebert/ponytail)** — recommended companion. Always-on skill that makes the agent walk a "lazy ladder" before writing code (YAGNI → stdlib → native → installed dep → one-liner → minimum). Benchmarked at -54% LOC / -20% cost / -27% time on real Claude Code tasks, with safety guards kept intact. `project-executor` references the same ladder in its prompt, so the principle holds even without ponytail loaded — but the hook-level enforcement is worth installing:
+  ```
+  /plugin marketplace add DietrichGebert/ponytail
+  /plugin install ponytail@ponytail
+  ```
 - **`graft`** — git-worktree helper. If installed, `project-executor` creates an isolated worktree per task (cheap parallel work, easy rollback) and `/audit-overhead` flags worktrees that are merged/closed/stale or pushing disk usage past a threshold. Without `graft`, both agents fall back gracefully — nothing breaks.
 - **Atlassian MCP** — enables Jira ticket transitions and Confluence doc fetches in `project-planner` / `project-executor` / `idea-finder`. Without it, they skip those steps and operate from chat context only.
 - **Glean MCP** — enables semantic search across Slack/docs/PRs in `idea-finder`. Without it, the sweep narrows to local code + tickets/docs.

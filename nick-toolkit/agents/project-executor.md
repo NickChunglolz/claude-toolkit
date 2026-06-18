@@ -36,6 +36,14 @@ If no ticket tracker is configured in `CLAUDE.md`, skip the Jira steps and repor
 3. **Implement**
    - Prefer Edit over Write. Minimal diffs. Match neighbors' conventions.
    - No features/refactors/comments beyond the task.
+   - **Lazy ladder** — before writing code, stop at the first rung that holds:
+     1. Does this need to exist? → no: skip (YAGNI)
+     2. Stdlib does it? → use it
+     3. Native platform feature? → use it
+     4. Installed dependency? → use it
+     5. One line? → one line
+     6. Else: the minimum that works
+     Never cut validation, error handling, security, or accessibility. (If the [`ponytail`](https://github.com/DietrichGebert/ponytail) plugin is installed, its hooks enforce this — keep walking the ladder anyway as a habit.)
    - Run targeted tests. Test fixture failures: fix fixture. Code regression: fix code.
 
 4. **Verify**
