@@ -24,6 +24,15 @@ A single plugin, `nick-toolkit`, with:
   /plugin marketplace add DietrichGebert/ponytail
   /plugin install ponytail@ponytail
   ```
+- **[`context7`](https://github.com/upstash/context7)** — recommended companion. Pulls live, version-specific library docs into the session instead of relying on the model's training cutoff. Auto-invokes on library/API mentions; manual lookup via `/context7:docs <library> <query>`. Pairs well with `project-executor` when touching fast-moving libraries (Next.js, Prisma, gRPC bindings, etc).
+  ```
+  /plugin marketplace add upstash/context7
+  /plugin install context7@context7-marketplace
+  ```
+- **[`code-review`](https://claude.com/plugins/code-review)** (Anthropic official) — recommended companion. Runs 5 parallel Sonnet agents on your diff (CLAUDE.md compliance, bug detection, git-blame history, PR history, comments) with confidence scoring 0–100; only surfaces findings above threshold. Run before flipping `project-executor`'s draft PR to ready.
+  ```
+  /plugin install code-review@claude-plugins-official
+  ```
 - **`graft`** — git-worktree helper. If installed, `project-executor` creates an isolated worktree per task (cheap parallel work, easy rollback) and `/audit-overhead` flags worktrees that are merged/closed/stale or pushing disk usage past a threshold. Without `graft`, both agents fall back gracefully — nothing breaks.
 - **Atlassian MCP** — enables Jira ticket transitions and Confluence doc fetches in `project-planner` / `project-executor` / `idea-finder`. Without it, they skip those steps and operate from chat context only.
 - **Glean MCP** — enables semantic search across Slack/docs/PRs in `idea-finder`. Without it, the sweep narrows to local code + tickets/docs.
