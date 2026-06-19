@@ -17,6 +17,7 @@ A single plugin, `nick-toolkit`, with:
 - **`/kickoff`** — Consultant-style discovery for a fuzzy idea / project / ERD / PRD. Reflects what you said, asks 2-3 highest-value follow-ups (not a form), then synthesizes a structured Kickoff Brief and suggests a next step (brainstorm / project-planner / erd-creator / PRD / hold). Use when an idea isn't yet shaped enough to plan.
 - **`/finish`** — Chains `project-planner` → confirm → `project-executor` in one flow.
 - **`/audit-overhead`** — Periodic cleanup pass on your agents/skills/memory/CLAUDE.md. Also sweeps stale `graft` worktrees if `graft` is installed (skipped otherwise). Read-only; proposes cuts.
+- **`/verify-regression`** — Proves a bug-fix test is a real regression test by running it against the old code (must FAIL) and the new code (must PASS). Catches tests that assert the wrong invariant, mock the broken path, or depend on infrastructure that didn't exist before the fix.
 
 ## Optional integrations
 
@@ -87,7 +88,9 @@ claude plugin update nick-toolkit@nick-marketplace
 │   │   └── idea-finder.md
 │   └── skills/
 │       ├── finish/SKILL.md
-│       └── audit-overhead/SKILL.md
+│       ├── kickoff/SKILL.md
+│       ├── audit-overhead/SKILL.md
+│       └── verify-regression/SKILL.md
 ├── CLAUDE.md.template
 └── README.md
 ```
