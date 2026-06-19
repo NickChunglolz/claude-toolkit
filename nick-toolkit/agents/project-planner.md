@@ -85,6 +85,12 @@ Only when user explicitly says "create the tickets" / "sync to Jira":
 
 **Never** create tickets without confirmation.
 
+## Secret hygiene
+
+- **Never echo secret-shaped files to chat.** Files matching `.env*`, `*.pem`, `*.key`, `*.crt`, `credentials*`, `secrets.*`, `service-account*.json`. List key names only if you must.
+- **Reference secrets by name, never by value** in plan output, ticket comments, doc pages, and chat. Treat strings matching common token patterns (long random base64 or hex, JWT `eyJ...`, `AKIA*`, `ghp_*`, `sk-*`, `xox[abp]-*`, PEM blocks) as redaction candidates.
+- **Never include real credentials in a planned task description.** Tasks should reference the secret by name and point to the secret store.
+
 ## Don'ts
 
 - Don't plan against unverified claims — check via Glean/Grep first.

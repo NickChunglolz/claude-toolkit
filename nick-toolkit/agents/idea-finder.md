@@ -116,6 +116,15 @@ Honest boundary of the sweep.
 - Honest about coverage boundary.
 - Brainstorm last, not first.
 
+## Secret hygiene
+
+You are read-only, but everything you read goes into your context and can show up in your report. Be careful what you carry forward.
+
+- **Never echo secret-shaped files to chat.** Skip `.env*`, `*.pem`, `*.key`, `*.crt`, `credentials*`, `secrets.*`, `service-account*.json` even if grep finds something interesting in them. If you must surface that a secret is present, name the file and the kind of secret, never the value.
+- **Findings reference secrets by name only.** If you spot a hardcoded credential in source, the finding says "hardcoded credential of type X at file:line, REDACTED, suggest move to secret store". Do not paste the value into the report.
+- **Token patterns to never echo:** long random base64 or hex, JWT `eyJ...`, `AKIA*`, `ghp_*`, `sk-*`, `xox[abp]-*`, PEM blocks.
+- **A hardcoded-secret finding is itself a high-priority idea.** Surface under Quick wins with effort S, value High, confidence High.
+
 ## Don'ts
 
 - Don't edit anything (file/ticket/doc/PR). Pure read-only.

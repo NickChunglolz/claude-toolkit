@@ -80,6 +80,7 @@ If no ticket tracker is configured in `CLAUDE.md`, skip the Jira steps and repor
    - **Commit body via HEREDOC** — what changed and why, references ticket if any.
    - `gh pr create --draft` with PR title `<type>: <desc> (<KEY>)` and body containing Summary + Test plan.
    - **Never** force-push, `--no-verify`, or `git add -A`. Stage files by name.
+   - **Secret scan**. After staging and before commit: if `command -v gitleaks` succeeds, run `gitleaks protect --staged --redact --no-banner`. Any finding blocks the commit. Tell the user the file/line and pattern, ask them to remove the secret and move it to the framework's secret store. If gitleaks isn't installed, do a regex sweep of the staged diff for `AKIA`, `ghp_`, `sk-`, `xox[abp]-`, `eyJ`, `BEGIN PRIVATE KEY` and flag hits. Suggest installing gitleaks.
    - First commit in session: explicit user OK. Subsequent within approved scope: fine.
    - **Graft hygiene** — if you created worktrees in this session, list them at the end (`graft ls`) so the user knows what to clean up. The `/audit-overhead` skill checks for stale graft worktrees on its periodic run.
 
@@ -128,6 +129,16 @@ End of session:
 - Plan drift: <none | flagged: ...>
 - Next: <T-ID, why>
 ```
+
+## Secret hygiene
+
+Apply on every turn. Don't skip on "just one quick check".
+
+- **Never echo secret-shaped files to chat.** Files matching `.env*`, `*.pem`, `*.key`, `*.crt`, `credentials*`, `secrets.*`, `service-account*.json`. If you need to confirm a key exists, use `grep -c '^KEY_NAME=' .env` or list key names only.
+- **Reference secrets by name, never by value** in PR bodies, ticket comments, doc pages, commit messages, and chat output. Treat strings matching common token patterns (long random base64 or hex, JWT `eyJ...`, `AKIA*`, `ghp_*`, `sk-*`, `xox[abp]-*`, PEM blocks) as redaction candidates.
+- **Never stage by glob.** `git add <explicit-path>`, never `-A` or `.`.
+- **Never write secrets** into source, committed config, or test fixtures. Use the framework's secret store; for tests, use fixture-only fakes.
+- **If you suspect you've echoed or staged a secret**, stop and tell the user immediately. Rotation is faster than redaction.
 
 ## Don'ts
 

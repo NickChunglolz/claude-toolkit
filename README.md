@@ -19,6 +19,7 @@ A single plugin, `nick-toolkit`, with:
 - **`/finish`** — Chains `project-planner` → confirm → `project-executor` in one flow.
 - **`/audit-overhead`** — Periodic cleanup pass on your agents/skills/memory/CLAUDE.md. Also sweeps stale `graft` worktrees if `graft` is installed (skipped otherwise). Read-only; proposes cuts.
 - **`/verify-regression`** — Proves a bug-fix test is a real regression test by running it against the old code (must FAIL) and the new code (must PASS). Catches tests that assert the wrong invariant, mock the broken path, or depend on infrastructure that didn't exist before the fix.
+- **`/scan-secrets`** — Read-only audit for leaked secrets in a file, directory, diff, or staged change. Wraps `gitleaks` if installed, otherwise regex sweep (AWS, GCP, GitHub, Slack, OpenAI, JWT, PEM). Always redacts values in output. Pairs with the secret-hygiene rules baked into every agent in this toolkit.
 
 ## Optional integrations
 
@@ -92,7 +93,8 @@ claude plugin update nick-toolkit@nick-marketplace
 │       ├── finish/SKILL.md
 │       ├── kickoff/SKILL.md
 │       ├── audit-overhead/SKILL.md
-│       └── verify-regression/SKILL.md
+│       ├── verify-regression/SKILL.md
+│       └── scan-secrets/SKILL.md
 ├── CLAUDE.md.template
 └── README.md
 ```

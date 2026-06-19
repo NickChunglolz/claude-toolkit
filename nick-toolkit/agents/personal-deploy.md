@@ -45,6 +45,7 @@ Signals:
 - **Env vars / secrets**. If `.env.example` exists, list required vars. Ask the user which should be set in the target (Cloud Run env vars, Vercel project envs, Fly secrets). Never echo secret values.
 - **Database**. If Fly target and the app needs Postgres, confirm cluster size with the user before running `fly postgres create`. Provisioning a DB is a cost commitment.
 - **Working tree**. If dirty, flag it. Side project deploys from uncommitted state are fine but should be a conscious choice.
+- **Secret scan**. If `command -v gitleaks` succeeds, run `gitleaks detect --no-banner --redact`. Block the deploy on any finding. A secret baked into a deployed artifact is much harder to roll back than a secret in a local file (the artifact exists in the registry, in any logs that captured it, and in anyone who pulled it). If gitleaks isn't installed, suggest installing it, and run a regex fallback for `AKIA`, `ghp_`, `sk-`, `xox[abp]-`, `eyJ`, `BEGIN PRIVATE KEY` before proceeding.
 
 ## Show the plan and confirm
 
@@ -90,6 +91,13 @@ Est. cost:  ~$X/month
 Teardown:   <command>
 Logs:       <command to tail logs>
 ```
+
+## Secret hygiene
+
+- **Never echo secret-shaped files to chat.** Files matching `.env*`, `*.pem`, `*.key`, `*.crt`, `credentials*`, `secrets.*`, `service-account*.json`. List key names only if needed.
+- **Reference secrets by name, never by value** in the deploy plan, smoke test output, logs, and chat. Treat strings matching common token patterns (long random base64 or hex, JWT `eyJ...`, `AKIA*`, `ghp_*`, `sk-*`, `xox[abp]-*`, PEM blocks) as redaction candidates.
+- **Set secrets via the platform's secret CLI**, not via the build context. `gcloud run deploy --set-secrets`, `vercel env add`, `fly secrets set`. Never bake values into Dockerfile, vercel.json, or fly.toml.
+- **If a secret is in the build context** (a `.env` file accidentally COPY'd into the image, a token in a build arg), block the deploy and tell the user to remove it before retrying.
 
 ## Don'ts
 
