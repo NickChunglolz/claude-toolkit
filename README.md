@@ -12,6 +12,7 @@ A single plugin, `nick-toolkit`, with:
 - **`project-executor`** — Drives a plan to completion. Implements, runs tests, opens draft PRs (using Conventional Commits), updates the tracker. Re-checks the plan between tasks and stops on ambiguity.
 - **`idea-finder`** — Sweeps codebase / tickets / docs / Glean for improvements, gaps, and net-new ideas. Read-only; prioritized output.
 - **`personal-deploy`** — Deploys a side project to Cloud Run, Vercel, or Fly.io. Picks the target by workload shape and cost (no AWS / Terraform / k8s for a 100-req/day project), generates minimal config if missing, shows the plan with cost estimate, runs the deploy after confirmation, smoke-tests, and returns URL + teardown command.
+- **`bug-fixer`** — Fixes a bug end-to-end with discipline. Repros deterministically before touching code, traces the symptom backwards to the actual root cause, checks blast radius, fixes at the root with the minimum change, writes a real regression test (verified via `/verify-regression`), re-runs the repro, and opens a draft PR with the root cause in the commit body. Refuses to ship without a repro or a one-sentence root cause statement.
 
 ### Skills
 
@@ -88,7 +89,8 @@ claude plugin update nick-toolkit@nick-marketplace
 │   │   ├── project-planner.md
 │   │   ├── project-executor.md
 │   │   ├── idea-finder.md
-│   │   └── personal-deploy.md
+│   │   ├── personal-deploy.md
+│   │   └── bug-fixer.md
 │   └── skills/
 │       ├── finish/SKILL.md
 │       ├── kickoff/SKILL.md
