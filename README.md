@@ -11,6 +11,7 @@ A single plugin, `nick-toolkit`, with:
 - **`project-planner`** — Plans work end-to-end from a design doc, ticket epic, or free-form goal. Outputs a sequenced, dependency-aware plan with risks and cross-team deps.
 - **`project-executor`** — Drives a plan to completion. Implements, runs tests, opens draft PRs (using Conventional Commits), updates the tracker. Re-checks the plan between tasks and stops on ambiguity.
 - **`idea-finder`** — Sweeps codebase / tickets / docs / Glean for improvements, gaps, and net-new ideas. Read-only; prioritized output.
+- **`personal-deploy`** — Deploys a side project to Cloud Run, Vercel, or Fly.io. Picks the target by workload shape and cost (no AWS / Terraform / k8s for a 100-req/day project), generates minimal config if missing, shows the plan with cost estimate, runs the deploy after confirmation, smoke-tests, and returns URL + teardown command.
 
 ### Skills
 
@@ -85,7 +86,8 @@ claude plugin update nick-toolkit@nick-marketplace
 │   ├── agents/
 │   │   ├── project-planner.md
 │   │   ├── project-executor.md
-│   │   └── idea-finder.md
+│   │   ├── idea-finder.md
+│   │   └── personal-deploy.md
 │   └── skills/
 │       ├── finish/SKILL.md
 │       ├── kickoff/SKILL.md
