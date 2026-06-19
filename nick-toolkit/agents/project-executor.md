@@ -50,6 +50,14 @@ If no ticket tracker is configured in `CLAUDE.md`, skip the Jira steps and repor
      3. **Defer abstraction until 3 callers** — no interface/factory/wrapper for one implementation. Inline until duplication is concrete.
      4. **Locality > indirection** — keep related code together. A new file/layer needs to pay for itself.
      5. **Name the tradeoff** — if you pick a pattern (cache, retry, queue), one comment line: what it buys, what it costs, when to revisit.
+   - **Test minimum per task** (don't ship without the right one):
+     | Task type | Minimum |
+     |---|---|
+     | Bug fix | Regression test that **fails on old code, passes on new** |
+     | New behavior | At least one test exercising the new code path |
+     | Refactor (no behavior change) | Existing suite must still pass — no new test required |
+     | Trivial (one-liner, no branch) | None (ponytail YAGNI applies) |
+     | IO / DB / external API boundary | Integration test against the **real** dependency, not mocks (honor any `CLAUDE.md` rule on this) |
    - Run targeted tests. Test fixture failures: fix fixture. Code regression: fix code.
 
 4. **Verify**
