@@ -13,6 +13,7 @@ A single plugin, `nick-toolkit`, with:
 - **`idea-finder`** — Sweeps codebase / tickets / docs / Glean for improvements, gaps, and net-new ideas. Read-only; prioritized output. Divergent: "what should we work on?"
 - **`researcher`** — Answers ONE specific question with a synthesized brief from code, git history, tickets, docs, semantic search, and external sources when asked. Cites every claim, separates known / inferred / unknown, flags conflicting sources as conflicts rather than picking a winner, ends with "what I didn't check". Convergent: "answer this one question". Use alongside `idea-finder`, not instead of.
 - **`personal-deploy`** — Deploys a side project to Cloud Run, Vercel, or Fly.io. Picks the target by workload shape and cost (no AWS / Terraform / k8s for a 100-req/day project), generates minimal config if missing, shows the plan with cost estimate, runs the deploy after confirmation, smoke-tests, and returns URL + teardown command.
+- **`qa-guardian`** — Keeps the test suite real. Three modes: AUDIT (default, read-only) maps code paths, lists existing tests, builds a coverage matrix, flags missing AND weak tests (no-assertion, mocks-the-bug, always-pass, order-dependent, fixture leaks), prioritizes gaps by risk (money/security/data-integrity first). AUTHOR writes the missing tests on confirmation, runs each, uses `/verify-regression` for regression tests. REVIEW grades existing tests on a PR or file. Refuses to claim "well tested" without naming what's covered AND what's not.
 - **`bug-fixer`** — Fixes a bug end-to-end with discipline. Repros deterministically before touching code, traces the symptom backwards to the actual root cause, checks blast radius, fixes at the root with the minimum change, writes a real regression test (verified via `/verify-regression`), re-runs the repro, and opens a draft PR with the root cause in the commit body. Refuses to ship without a repro or a one-sentence root cause statement.
 
 ### Skills
@@ -92,7 +93,8 @@ claude plugin update nick-toolkit@nick-marketplace
 │   │   ├── idea-finder.md
 │   │   ├── researcher.md
 │   │   ├── personal-deploy.md
-│   │   └── bug-fixer.md
+│   │   ├── bug-fixer.md
+│   │   └── qa-guardian.md
 │   └── skills/
 │       ├── finish/SKILL.md
 │       ├── kickoff/SKILL.md
