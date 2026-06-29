@@ -53,6 +53,32 @@ Only when the project has paying users or measurable load. Surface this row as a
 - Error monitoring (Sentry free tier covers most side projects; paid at real volume).
 - Status page / uptime monitoring (BetterStack/UptimeRobot free tiers).
 
+## Observability — non-negotiable, free tier covers it
+
+Every brief includes these four. No "we'll add it later" — later is the 3am page with no logs.
+
+| Need | Free pick | When to upgrade |
+|------|-----------|-----------------|
+| **Logs** (queryable, > 24h retention) | Provider-native: Vercel logs, Cloud Logging (Cloud Run), `fly logs` + Axiom free (500GB/mo ingest) | When you can't grep across services — pay for Axiom/Datadog/Better Stack Logs. |
+| **Errors** (stack traces, grouped, alertable) | Sentry free (5k events/mo, 1 user) | Volume exceeds free tier OR you need >1 dev seat. |
+| **Uptime** (external check + alert) | BetterStack / UptimeRobot free (HTTP check every 3min, email/SMS alert) | When 3min resolution isn't enough or you need status page. |
+| **Cost alert** | Provider-native budget alert at $5 / $20 / $50 thresholds. GCP billing alert, Fly card cap, Vercel spend cap (Pro). | Never skip. A single misconfigured loop can burn $100/day. |
+
+Workload-specific adders (only when the workload calls for it):
+
+- **LLM-backed apps (eng-agent, chatbots, agents)** — log token counts + cost per request to your logs. Add **Helicone** (free 100k req/mo) or **Langfuse** (self-host free) as a proxy if you need traces/cost-per-user. Alert on daily spend, not just monthly — runaway loops spend hours, not weeks.
+- **ML training / batch jobs (ml-pipeline-kit)** — log run metadata (params, dataset hash, metrics, duration) to a file or **Weights & Biases free** (100GB) or **MLflow self-host**. Alert on job failure (provider-native: Cloud Run Jobs → Pub/Sub → email; Fly: exit-code monitor). Don't run training without a "did it finish and was it better than last time" check.
+- **Anything with a DB** — slow-query log on + an alert at p95 query time. Neon/Supabase/Fly Postgres all expose this for free.
+- **Cron jobs** — heartbeat to **healthchecks.io** (free 20 checks) so a silent cron is loud.
+
+What every brief MUST name:
+1. Where logs live + how to grep them (one command).
+2. What error tool is wired up.
+3. What uptime check is set + where the alert goes.
+4. Cost alert threshold + where it goes.
+
+If any of the four is missing in the brief, the brief is incomplete.
+
 ## Hard rules
 
 - **Co-locate DB and compute.** Same provider when possible, same region always. Cross-region DB calls turn a 5ms query into 80ms and burn egress.
@@ -61,7 +87,8 @@ Only when the project has paying users or measurable load. Surface this row as a
 - **Managed auth over rolling own.** Clerk/Supabase/Auth.js with a provider — not bcrypt + JWT from scratch. Auth bugs are security bugs.
 - **One database, not two.** Resist "Postgres for app + Redis for cache + DynamoDB for sessions" on a side project. One Postgres covers all three until it doesn't.
 - **Secrets in the provider's secret store**, not `.env` committed or baked into the image. Vercel envs, Fly secrets, Cloud Run env vars.
-- **Free tier ≠ no cost ceiling.** Set a budget alert on day one. GCP: billing alert at $5. Fly: card cap. Vercel: spend cap on Pro only.
+- **Free tier ≠ no cost ceiling.** Cost alert is part of observability above — never skip.
+- **Observability before traffic.** Logs + errors + uptime + cost alert wired BEFORE the first real user. Adding them after an incident is too late.
 
 ## The output
 
@@ -75,8 +102,15 @@ Recommended stack ($X/mo):
 - Region: <region> — <why>
 - Cron/assets/etc as needed
 
+Observability:
+- Logs: <where> — grep with `<cmd>`
+- Errors: <tool> — wired to <project/org>
+- Uptime: <tool> checks <url> every <N>min → alert to <channel>
+- Cost alert: $<threshold> via <provider> → <channel>
+- Workload-specific: <LLM token logging / ML run logging / cron heartbeat — if applicable>
+
 Skipped: <what you didn't add and when to add it>
-Cost ceiling: free tier ends at <metric>. Add billing alert at $<X>.
+Cost ceiling: free tier ends at <metric>. Budget alert set above.
 Teardown: <one-line command per resource>
 
 Next: /personal-deploy to ship it, or push back if anything looks wrong.
