@@ -79,6 +79,29 @@ What every brief MUST name:
 
 If any of the four is missing in the brief, the brief is incomplete.
 
+### Best practices (industry standard, applied lazy)
+
+Real observability has decades of practice behind it. At side-project scale, the rules below are the cheap-to-adopt, expensive-to-add-later ones. Skip the rest until the project has paying users.
+
+- **Structured logs (JSON), not strings.** `log.info({msg, requestId, userId, latencyMs, action})` — not `console.log("user 42 did thing in 120ms")`. Every modern logger does it; Pino (node), `slog` (Go), `structlog` (Python). Grep becomes filter, which actually scales.
+- **One correlation ID per request, propagated everywhere.** Generate at the edge (`crypto.randomUUID()`), put in every log line and every downstream call (`x-request-id` header, DB query comment, LLM metadata). One ID stitches a user's flow across services without joining timestamps.
+- **Log levels used correctly.** `ERROR` = something a human should look at. `WARN` = degraded but recovered. `INFO` = one line per request/job. `DEBUG` = off in prod, on locally. If everything is `INFO`, nothing is.
+- **No PII / secrets in logs.** No emails, tokens, full card numbers, raw prompts containing user data, or `Authorization` headers. Redact at the logger layer, not at each call site. One leak in logs is one leak in every log sink forever.
+- **Alert on symptoms, not causes.** "Error rate > 1% for 5min" or "p95 latency > 2s" pages someone. "CPU > 80%" does not — it's a cause that often doesn't matter. The user feels symptoms; pages should match.
+- **One SLO per service.** Pick one: "99% of requests under 500ms over 7 days" or "99.5% uptime over 30 days." It turns alerts from arbitrary thresholds into "did we break the promise." Sentry, Datadog, Grafana Cloud all do SLO math on free tiers.
+- **RED for every HTTP service.** Rate (req/s), Errors (% non-2xx), Duration (p50/p95/p99). Three numbers per endpoint, on one dashboard. Cloud Run / Vercel / Fly all give these for free — just bookmark the dashboard.
+- **Every alert links a runbook.** Even one sentence: "Check `fly logs -a app`. If DB connection errors, restart Postgres." Future-you at 3am is not as smart as present-you.
+- **OpenTelemetry if you're starting fresh.** Vendor-neutral SDK; later swap Sentry → Datadog → Honeycomb without rewriting instrumentation. Side-project lazy: use the auto-instrumentation for your framework, ship traces to whichever free tier you picked. Skip custom spans until you need them.
+- **Sample at volume; keep everything at side-project volume.** Under ~1M req/mo, keep 100%. Past that, head-sampling at 10% + tail-sampling on errors. Decide the rule before you hit the bill.
+- **Test that alerts fire.** Trigger one synthetic failure per channel after wiring. An alert that never fires is indistinguishable from a broken alert.
+
+What to skip at side-project scale (add when paying users exist):
+- Distributed tracing with custom spans across services.
+- Multi-region log aggregation.
+- Custom Grafana dashboards beyond the provider defaults.
+- On-call rotation / paging escalation (one channel to your phone is enough).
+- Log retention beyond what the free tier gives.
+
 ## Hard rules
 
 - **Co-locate DB and compute.** Same provider when possible, same region always. Cross-region DB calls turn a 5ms query into 80ms and burn egress.
